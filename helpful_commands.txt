@@ -1,0 +1,9 @@
+pip3 freeze > requirements.txt
+python -m PyQt5.uic.pyuic -x [FILENAME].ui -o [FILENAME].py
+
+
+tftp install(command line)
+Enable-WindowsOptionalFeature –FeatureName TFTP -Online
+
+Передать файл на TFTP сервер: tftp 192.168.1.100 PUT имя_файла.txt
+Скачать файл с TFTP: tftp 168.1.100 GET имя_файла.txt
