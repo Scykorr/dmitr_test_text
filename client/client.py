@@ -39,6 +39,8 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
                 et_text = f_etalon.read()
                 print(et_text)
             self.textEdit_3.setText(et_text)
+            pathlib.Path(f'{self.file_name}.txt').unlink()
+            pathlib.Path(f'{file_name_etalon}').unlink()
 
     def change_size(self, width, height):
         self.setFixedWidth(width)
