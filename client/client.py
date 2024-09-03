@@ -27,7 +27,6 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
             pathlib.Path(f'{self.file_name}.txt').touch()
             pathlib.Path(f'{self.file_name}.txt').write_text(self.textEdit.toPlainText())
             os.system(f'tftp 127.0.0.1 PUT {self.file_name}.txt')
-            pathlib.Path(f'{self.file_name}.txt').unlink()
             self.stackedWidget.setCurrentIndex(page_index)
             os.system(f'tftp 127.0.0.1 GET {self.file_name}.txt')
             with open(f'{self.file_name}.txt', 'r') as f:
