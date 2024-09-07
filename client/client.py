@@ -36,15 +36,21 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
             os.system(f'tftp 127.0.0.1 GET {file_name_etalon}')
             with open(f'{file_name_etalon}', 'r') as f_etalon:
                 et_text = f_etalon.read()
-                print(et_text)
             self.textEdit_3.setText(et_text)
             pathlib.Path(f'{self.file_name}.txt').unlink()
             pathlib.Path(f'{file_name_etalon}').unlink()
+            self.check_answer(et_text, text)
 
     def change_size(self, width, height):
         self.setFixedWidth(width)
         self.setFixedHeight(height)
 
+
+    def check_answer(self, right_text, init_test):
+        right_text_list = list(right_text.split('\n'))
+        with open(init_test, 'r') as f:
+            for index, line in enumerate(f):
+                pass
 
 if __name__ == "__main__":
     import sys

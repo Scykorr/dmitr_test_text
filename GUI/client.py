@@ -18,7 +18,7 @@ class Ui_MainWindow(object):
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.stackedWidget = QtWidgets.QStackedWidget(self.centralwidget)
-        self.stackedWidget.setGeometry(QtCore.QRect(20, 20, 721, 481))
+        self.stackedWidget.setGeometry(QtCore.QRect(20, 10, 721, 491))
         self.stackedWidget.setObjectName("stackedWidget")
         self.page_3 = QtWidgets.QWidget()
         self.page_3.setObjectName("page_3")
@@ -62,11 +62,17 @@ class Ui_MainWindow(object):
         self.page_2 = QtWidgets.QWidget()
         self.page_2.setObjectName("page_2")
         self.textEdit_2 = QtWidgets.QTextEdit(self.page_2)
-        self.textEdit_2.setGeometry(QtCore.QRect(30, 10, 281, 441))
+        self.textEdit_2.setGeometry(QtCore.QRect(30, 40, 281, 441))
         self.textEdit_2.setObjectName("textEdit_2")
         self.textEdit_3 = QtWidgets.QTextEdit(self.page_2)
-        self.textEdit_3.setGeometry(QtCore.QRect(360, 10, 281, 441))
+        self.textEdit_3.setGeometry(QtCore.QRect(360, 40, 281, 441))
         self.textEdit_3.setObjectName("textEdit_3")
+        self.label_5 = QtWidgets.QLabel(self.page_2)
+        self.label_5.setGeometry(QtCore.QRect(50, 10, 61, 16))
+        self.label_5.setObjectName("label_5")
+        self.label_6 = QtWidgets.QLabel(self.page_2)
+        self.label_6.setGeometry(QtCore.QRect(360, 10, 61, 16))
+        self.label_6.setObjectName("label_6")
         self.stackedWidget.addWidget(self.page_2)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
@@ -91,6 +97,8 @@ class Ui_MainWindow(object):
         self.label_4.setText(_translate("MainWindow", "Эталон"))
         self.pushButton.setText(_translate("MainWindow", "Отправить результаты\n"
 " на сервер"))
+        self.label_5.setText(_translate("MainWindow", "Ваш ответ"))
+        self.label_6.setText(_translate("MainWindow", "Эталон"))
 
 
 if __name__ == "__main__":
