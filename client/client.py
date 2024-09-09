@@ -18,7 +18,7 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pushButton_2.clicked.connect(lambda: self.choose_operator(page_index=1))
         self.pushButton.clicked.connect(lambda: self.choose_operator(page_index=2))
         self.lineEdit.setText('as as as')
-        self.lineEdit_4.setText('etalon1.txt')
+        self.lineEdit_4.setText('standard1.txt')
 
     def choose_operator(self, page_index):
         if page_index == 1 and self.lineEdit.text() != "":
