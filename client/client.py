@@ -1,6 +1,10 @@
 import pathlib
 import os
+from types import NoneType
+
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import Qt
+
 from GUI.client import Ui_MainWindow
 
 
@@ -13,6 +17,8 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
         self.setWindowTitle('Клиент тестирования')
         self.pushButton_2.clicked.connect(lambda: self.choose_operator(page_index=1))
         self.pushButton.clicked.connect(lambda: self.choose_operator(page_index=2))
+        self.lineEdit.setText('as as as')
+        self.lineEdit_4.setText('etalon1.txt')
 
     def choose_operator(self, page_index):
         if page_index == 1 and self.lineEdit.text() != "":
@@ -38,16 +44,7 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
             with open(f'{file_name_etalon}', 'r') as f_etalon:
                 et_text = f_etalon.read()
 
-            # init tables
-
-            user_text_list = text.split('\n')
-            user_table = self.tableWidget
-            user_table.setRowCount(len(user_text_list))
-            user_table.setColumnCount(1)
-            user_table.setHorizontalHeaderLabels(["Строки скрипта"])
-
-            for index_el, el in enumerate(user_text_list):
-                user_table.setItem(index_el, 0, QtWidgets.QTableWidgetItem(el))
+            # init tableWidgets
 
             etalon_text_list = et_text.split('\n')
             etalon_table = self.tableWidget_2
@@ -56,18 +53,42 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
             etalon_table.setHorizontalHeaderLabels(["Строки скрипта"])
 
             for index_el, el in enumerate(etalon_text_list):
-                etalon_table.setItem(index_el, 0, QtWidgets.QTableWidgetItem(el))
+                etalon_table.setItem(index_el, 0, QtWidgets.QTableWidgetItem(str(el)))
+
+            user_text_list = text.split('\n')
+            user_table = self.tableWidget
+            if len(user_text_list) < len(etalon_text_list):
+                user_list_len = len(etalon_text_list)
+            else:
+                user_list_len = len(user_text_list)
+            user_table.setRowCount(user_list_len)
+            user_table.setColumnCount(1)
+            user_table.setHorizontalHeaderLabels(["Строки скрипта"])
+
+            for index_el, el in enumerate(user_text_list):
+                user_table.setItem(index_el, 0, QtWidgets.QTableWidgetItem(str(el)))
 
             pathlib.Path(f'{self.file_name}.txt').unlink()
             pathlib.Path(f'{file_name_etalon}').unlink()
-            self.check_answer()
+            self.check_answer(etalon_text_list)
 
     def change_size(self, width, height):
         self.setFixedWidth(width)
         self.setFixedHeight(height)
 
-    def check_answer(self):
-        pass
+    def check_answer(self, etalon_text_list):
+        user_table = self.tableWidget
+        etalon_table = self.tableWidget_2
+        for el_index in range(len(etalon_text_list)):
+            user_text = ''
+            print()
+            if type(user_table.item(el_index, 0)) == NoneType:
+                user_table.setItem(el_index, 0, QtWidgets.QTableWidgetItem(str('')))
+            else:
+                user_text = user_table.item(el_index, 0).text()
+            etalon_text = etalon_table.item(el_index, 0).text()
+            if user_text != etalon_text:
+                user_table.item(el_index, 0).setBackground(QtGui.QColor(255, 0, 0))
 
 
 if __name__ == "__main__":
