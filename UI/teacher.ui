@@ -18,13 +18,13 @@
     <property name="geometry">
      <rect>
       <x>30</x>
-      <y>20</y>
+      <y>10</y>
       <width>721</width>
-      <height>481</height>
+      <height>531</height>
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="page_3">
      <widget class="QLineEdit" name="lineEdit_2">
@@ -77,7 +77,7 @@
       <property name="geometry">
        <rect>
         <x>90</x>
-        <y>260</y>
+        <y>180</y>
         <width>75</width>
         <height>23</height>
        </rect>
@@ -86,57 +86,100 @@
        <string>Далее</string>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEdit_4">
+    </widget>
+    <widget class="QWidget" name="page">
+     <widget class="QTableWidget" name="tableWidget">
       <property name="geometry">
        <rect>
-        <x>70</x>
-        <y>200</y>
-        <width>113</width>
-        <height>20</height>
+        <x>10</x>
+        <y>10</y>
+        <width>321</width>
+        <height>471</height>
        </rect>
+      </property>
+     </widget>
+     <widget class="QTableWidget" name="tableWidget_2">
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>10</y>
+        <width>301</width>
+        <height>471</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="comboBox">
+      <property name="geometry">
+       <rect>
+        <x>380</x>
+        <y>490</y>
+        <width>241</width>
+        <height>22</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="page_2">
+     <widget class="QPushButton" name="pushButton">
+      <property name="geometry">
+       <rect>
+        <x>610</x>
+        <y>0</y>
+        <width>75</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>назад</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>10</y>
+        <width>47</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Эталон</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_4">
       <property name="geometry">
        <rect>
-        <x>70</x>
-        <y>180</y>
-        <width>161</width>
+        <x>400</x>
+        <y>10</y>
+        <width>121</width>
         <height>16</height>
        </rect>
       </property>
       <property name="text">
-       <string>Файл эталонной конфигурации</string>
+       <string>Скрипт пользователя</string>
       </property>
      </widget>
-    </widget>
-    <widget class="QWidget" name="page">
-     <widget class="QPushButton" name="pushButton">
+     <widget class="QTableWidget" name="tableWidget_3">
       <property name="geometry">
        <rect>
-        <x>100</x>
-        <y>440</y>
-        <width>141</width>
-        <height>41</height>
+        <x>10</x>
+        <y>30</y>
+        <width>331</width>
+        <height>491</height>
        </rect>
       </property>
-      <property name="text">
-       <string>Отправить результаты
- на сервер</string>
-      </property>
      </widget>
-     <widget class="QTextEdit" name="textEdit">
+     <widget class="QTableWidget" name="tableWidget_4">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>0</y>
-        <width>271</width>
-        <height>431</height>
+        <x>350</x>
+        <y>30</y>
+        <width>331</width>
+        <height>491</height>
        </rect>
       </property>
      </widget>
     </widget>
-    <widget class="QWidget" name="page_2"/>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
