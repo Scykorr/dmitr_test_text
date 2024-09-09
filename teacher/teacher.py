@@ -26,11 +26,13 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
         if page_index == 1:
             self.stackedWidget.setCurrentIndex(page_index)
             self.change_size(721, 551)
-            self.get_standard_files()
+            if self.comboBox.currentText() == '':
+                self.get_standard_files()
             self.show_standard_file()
             self.get_user_files()
         if page_index == 2:
             self.stackedWidget.setCurrentIndex(page_index)
+            self.show_user_script(self.users_files_table.currentItem().text())
 
     def get_standard_files(self):
         directory = self.lineEdit_3.text()
@@ -39,9 +41,11 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
 
         files += os.listdir(directory)
         standard_files = list()
+
         for file in files:
             if 'standard' in file:
                 standard_files.append(file)
+        self.comboBox.clear()
         self.comboBox.addItems(standard_files)
 
     def get_user_files(self):
@@ -51,7 +55,7 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
         files += os.listdir(directory)
         users_files = list()
         for file in files:
-            if 'standard' not in file:
+            if '.txt' in file and 'standard' not in file:
                 users_files.append(file)
         self.users_files_table.setColumnCount(1)
         self.users_files_table.setRowCount(len(users_files))
@@ -77,7 +81,63 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
         for index_el, el in enumerate(standard_text_list):
             standard_table.setItem(index_el, 0, QtWidgets.QTableWidgetItem(str(el)))
 
+        # second standard widget
+
+        standard_table_second = self.tableWidget_3
+        standard_table_second.setRowCount(len(standard_text_list))
+        standard_table_second.setColumnCount(1)
+        standard_table_second.setHorizontalHeaderLabels(["Строки скрипта"])
+
+        for index_el, el in enumerate(standard_text_list):
+            standard_table_second.setItem(index_el, 0, QtWidgets.QTableWidgetItem(str(el)))
+
         pathlib.Path(f'{file_name_standard}').unlink()
+
+    def show_user_script(self, user_script_file):
+
+        file_name_standard = self.comboBox.currentText()
+        os.system(f'tftp 127.0.0.1 GET {file_name_standard}')
+        with open(f'{file_name_standard}', 'r') as f_standard:
+            st_text = f_standard.read()
+
+        # init tableWidgets
+
+        standard_text_list = st_text.split('\n')
+
+        os.system(f'tftp 127.0.0.1 GET {user_script_file}')
+        with open(f'{user_script_file}', 'r') as f:
+            text = f.read()
+
+        user_text_list = text.split('\n')
+        user_table = self.tableWidget_4
+        if len(user_text_list) < len(standard_text_list):
+            user_list_len = len(standard_text_list)
+        else:
+            user_list_len = len(user_text_list)
+        user_table.setRowCount(user_list_len)
+        user_table.setColumnCount(1)
+        user_table.setHorizontalHeaderLabels(["Строки скрипта"])
+
+        for index_el, el in enumerate(user_text_list):
+            user_table.setItem(index_el, 0, QtWidgets.QTableWidgetItem(str(el)))
+
+        pathlib.Path(f'{user_script_file}').unlink()
+        pathlib.Path(f'{file_name_standard}').unlink()
+        self.check_answer(standard_text_list)
+
+    def check_answer(self, etalon_text_list):
+        user_table = self.tableWidget_4
+        etalon_table = self.tableWidget_3
+        for el_index in range(len(etalon_text_list)):
+            user_text = ''
+            print()
+            if type(user_table.item(el_index, 0)) == NoneType:
+                user_table.setItem(el_index, 0, QtWidgets.QTableWidgetItem(str('')))
+            else:
+                user_text = user_table.item(el_index, 0).text()
+            etalon_text = etalon_table.item(el_index, 0).text()
+            if user_text != etalon_text:
+                user_table.item(el_index, 0).setBackground(QtGui.QColor(255, 0, 0))
 
     def change_size(self, width, height):
         self.setFixedWidth(width)
