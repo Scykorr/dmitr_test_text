@@ -160,26 +160,6 @@
      </widget>
     </widget>
     <widget class="QWidget" name="page_2">
-     <widget class="QTextEdit" name="textEdit_2">
-      <property name="geometry">
-       <rect>
-        <x>30</x>
-        <y>40</y>
-        <width>281</width>
-        <height>441</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QTextEdit" name="textEdit_3">
-      <property name="geometry">
-       <rect>
-        <x>360</x>
-        <y>40</y>
-        <width>281</width>
-        <height>441</height>
-       </rect>
-      </property>
-     </widget>
      <widget class="QLabel" name="label_5">
       <property name="geometry">
        <rect>
@@ -204,6 +184,26 @@
       </property>
       <property name="text">
        <string>Эталон</string>
+      </property>
+     </widget>
+     <widget class="QTableWidget" name="tableWidget">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>40</y>
+        <width>301</width>
+        <height>451</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QTableWidget" name="tableWidget_2">
+      <property name="geometry">
+       <rect>
+        <x>360</x>
+        <y>40</y>
+        <width>301</width>
+        <height>451</height>
+       </rect>
       </property>
      </widget>
     </widget>
