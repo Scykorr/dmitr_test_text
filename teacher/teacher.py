@@ -28,20 +28,26 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
         self.lineEdit_2.setText('127.0.0.1')
         self.ip_address = self.lineEdit_2.text()
         self.pushButton_3.clicked.connect(lambda: self.choose_operator(page_index=1))
+        self.pushButton_6.clicked.connect(lambda: self.choose_operator(page_index=3))
+        self.pushButton_5.clicked.connect(lambda: self.choose_operator(page_index=1))
+        self.pushButton_4.clicked.connect(self.add_standard)
 
     def choose_operator(self, page_index):
         if page_index == 1:
             self.stackedWidget.setCurrentIndex(page_index)
-            self.change_size(921, 551)
+            self.change_size(941, 561)
             if self.comboBox.currentText() == '':
                 self.get_standard_files()
             self.show_standard_file()
             self.get_user_files()
-        if page_index == 2:
+        elif page_index == 2:
             if '.txt' in self.users_files_table.currentItem().text():
                 self.change_size(721, 551)
                 self.stackedWidget.setCurrentIndex(page_index)
                 self.show_user_script(self.users_files_table.currentItem().text())
+        elif page_index == 3:
+            self.change_size(448, 561)
+            self.stackedWidget.setCurrentIndex(page_index)
 
 
     def get_standard_files(self):
@@ -70,7 +76,7 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
         self.users_files_table.setColumnCount(5)
         self.users_files_table.setRowCount(len(users_files))
         self.users_files_table.setHorizontalHeaderLabels(
-            ["Строки скрипта", "Ош. строк", "Лишние строки", "Ош. символов", "Время сохранения файла"])
+            ["Строки скрипта", "Ош.\nстрок", "Лишние\nстроки", "Ош.\nсимволов", "Время сохранения файла"])
         header = self.users_files_table.horizontalHeader()
         header.setSectionResizeMode(0, QHeaderView.ResizeToContents)
         header.setSectionResizeMode(1, QHeaderView.ResizeToContents)
@@ -258,6 +264,21 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
             if user_text != etalon_text:
                 user_table.item(el_index, 0).setBackground(QtGui.QColor(255, 0, 0))
 
+    def add_standard(self):
+        path_file_name = self.lineEdit_3.text()
+        files = list()
+        files += os.listdir(path_file_name)
+        standard_files = list()
+        for file in files:
+            if 'standard' in file:
+                standard_files.append(file)
+        num = len(standard_files) + 1
+        file_name = f'standard{num}.txt'
+        pathlib.Path(f'{file_name}').touch()
+        pathlib.Path(f'{file_name}').write_text(self.textEdit.toPlainText())
+        os.system(f'tftp {self.ip_address} PUT {file_name}')
+        self.textEdit.clear()
+        pathlib.Path(f'{file_name}').unlink()
 
 if __name__ == "__main__":
     import sys

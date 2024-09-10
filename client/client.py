@@ -15,9 +15,11 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
         self.change_size(341, 300)
         self.setupUi(self)
         self.setWindowTitle('Клиент тестирования')
+        self.lineEdit_2.setText('127.0.0.1')
+        self.curr_ip = self.lineEdit_2.text()
         self.pushButton_2.clicked.connect(lambda: self.choose_operator(page_index=1))
         self.pushButton.clicked.connect(lambda: self.choose_operator(page_index=2))
-        self.lineEdit.setText('as as as')
+        self.lineEdit.setText('Ivanov Ivan Ivanovich')
         self.lineEdit_4.setText('standard1.txt')
 
     def choose_operator(self, page_index):
@@ -32,15 +34,15 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
             self.file_name = '_'.join(self.lineEdit.text().split())
             pathlib.Path(f'{self.file_name}.txt').touch()
             pathlib.Path(f'{self.file_name}.txt').write_text(self.textEdit.toPlainText())
-            os.system(f'tftp 127.0.0.1 PUT {self.file_name}.txt')
+            os.system(f'tftp {self.curr_ip} PUT {self.file_name}.txt')
             self.stackedWidget.setCurrentIndex(page_index)
 
-            os.system(f'tftp 127.0.0.1 GET {self.file_name}.txt')
+            os.system(f'tftp {self.curr_ip} GET {self.file_name}.txt')
             with open(f'{self.file_name}.txt', 'r') as f:
                 text = f.read()
 
             file_name_etalon = self.lineEdit_4.text()
-            os.system(f'tftp 127.0.0.1 GET {file_name_etalon}')
+            os.system(f'tftp {self.curr_ip} GET {file_name_etalon}')
             with open(f'{file_name_etalon}', 'r') as f_etalon:
                 et_text = f_etalon.read()
 
