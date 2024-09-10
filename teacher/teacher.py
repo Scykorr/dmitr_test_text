@@ -25,6 +25,9 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
         self.users_files_table.clicked.connect(
             lambda: self.show_checked_user_script(user_script_file=self.users_files_table.currentItem().text()))
         self.comboBox.currentTextChanged.connect(self.show_standard_file)
+        self.lineEdit_2.setText('127.0.0.1')
+        self.ip_address = self.lineEdit_2.text()
+        self.pushButton_3.clicked.connect(lambda: self.choose_operator(page_index=1))
 
     def choose_operator(self, page_index):
         if page_index == 1:
@@ -35,8 +38,11 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
             self.show_standard_file()
             self.get_user_files()
         if page_index == 2:
-            self.stackedWidget.setCurrentIndex(page_index)
-            self.show_user_script(self.users_files_table.currentItem().text())
+            if '.txt' in self.users_files_table.currentItem().text():
+                self.change_size(721, 551)
+                self.stackedWidget.setCurrentIndex(page_index)
+                self.show_user_script(self.users_files_table.currentItem().text())
+
 
     def get_standard_files(self):
         directory = self.lineEdit_3.text()
@@ -73,7 +79,7 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
         header.setSectionResizeMode(4, QHeaderView.ResizeToContents)
 
         file_name_standard = self.comboBox.currentText()
-        os.system(f'tftp 127.0.0.1 GET {file_name_standard}')
+        os.system(f'tftp {self.lineEdit_2.text()} GET {file_name_standard}')
         with open(f'{file_name_standard}', 'r') as f_standard:
             st_text = f_standard.read()
 
@@ -85,7 +91,7 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
             mtime_readable = datetime.fromtimestamp(mtime)
             self.users_files_table.setItem(index_el, 0, QtWidgets.QTableWidgetItem(str(el)))
             self.users_files_table.setItem(index_el, 4, QtWidgets.QTableWidgetItem(str(mtime_readable)))
-            os.system(f'tftp 127.0.0.1 GET {file_name_standard}')
+            os.system(f'tftp {self.lineEdit_2.text()} GET {file_name_standard}')
             with open(f'{filename}', 'r') as f_user:
                 usr_text = f_user.read()
             user_text_list = usr_text.split('\n')
@@ -109,12 +115,13 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
                             counter_error_symbols += 1
             self.users_files_table.setItem(index_el, 1, QtWidgets.QTableWidgetItem(str(counter_error_strings)))
             self.users_files_table.setItem(index_el, 3, QtWidgets.QTableWidgetItem(str(counter_error_symbols)))
+        pathlib.Path(f'{file_name_standard}').unlink()
 
 
 
     def show_standard_file(self):
         file_name_standard = self.comboBox.currentText()
-        os.system(f'tftp 127.0.0.1 GET {file_name_standard}')
+        os.system(f'tftp {self.lineEdit_2.text()} GET {file_name_standard}')
         with open(f'{file_name_standard}', 'r') as f_standard:
             st_text = f_standard.read()
 
@@ -141,36 +148,36 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
         self.get_user_files()
 
     def show_user_script(self, user_script_file):
+        if '.txt' in user_script_file:
+            file_name_standard = self.comboBox.currentText()
+            os.system(f'tftp {self.lineEdit_2.text()} GET {file_name_standard}')
+            with open(f'{file_name_standard}', 'r') as f_standard:
+                st_text = f_standard.read()
 
-        file_name_standard = self.comboBox.currentText()
-        os.system(f'tftp 127.0.0.1 GET {file_name_standard}')
-        with open(f'{file_name_standard}', 'r') as f_standard:
-            st_text = f_standard.read()
+            # init tableWidgets
 
-        # init tableWidgets
+            standard_text_list = st_text.split('\n')
 
-        standard_text_list = st_text.split('\n')
+            os.system(f'tftp {self.lineEdit_2.text()} GET {user_script_file}')
+            with open(f'{user_script_file}', 'r') as f:
+                text = f.read()
 
-        os.system(f'tftp 127.0.0.1 GET {user_script_file}')
-        with open(f'{user_script_file}', 'r') as f:
-            text = f.read()
+            user_text_list = text.split('\n')
+            user_table = self.tableWidget_4
+            if len(user_text_list) < len(standard_text_list):
+                user_list_len = len(standard_text_list)
+            else:
+                user_list_len = len(user_text_list)
+            user_table.setRowCount(user_list_len)
+            user_table.setColumnCount(1)
+            user_table.setHorizontalHeaderLabels(["Строки скрипта"])
 
-        user_text_list = text.split('\n')
-        user_table = self.tableWidget_4
-        if len(user_text_list) < len(standard_text_list):
-            user_list_len = len(standard_text_list)
-        else:
-            user_list_len = len(user_text_list)
-        user_table.setRowCount(user_list_len)
-        user_table.setColumnCount(1)
-        user_table.setHorizontalHeaderLabels(["Строки скрипта"])
+            for index_el, el in enumerate(user_text_list):
+                user_table.setItem(index_el, 0, QtWidgets.QTableWidgetItem(str(el)))
 
-        for index_el, el in enumerate(user_text_list):
-            user_table.setItem(index_el, 0, QtWidgets.QTableWidgetItem(str(el)))
-
-        pathlib.Path(f'{user_script_file}').unlink()
-        pathlib.Path(f'{file_name_standard}').unlink()
-        self.check_answer(standard_text_list, user_text_list)
+            pathlib.Path(f'{user_script_file}').unlink()
+            pathlib.Path(f'{file_name_standard}').unlink()
+            self.check_answer(standard_text_list, user_text_list)
 
     def check_answer(self, etalon_text_list, user_list):
         user_table = self.tableWidget_4
@@ -202,7 +209,7 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
     def show_checked_user_script(self, user_script_file):
         if self.users_files_table.currentColumn() == 0:
             file_name_standard = self.comboBox.currentText()
-            os.system(f'tftp 127.0.0.1 GET {file_name_standard}')
+            os.system(f'tftp {self.lineEdit_2.text()} GET {file_name_standard}')
             with open(f'{file_name_standard}', 'r') as f_standard:
                 st_text = f_standard.read()
 
@@ -210,7 +217,7 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
 
             standard_text_list = st_text.split('\n')
 
-            os.system(f'tftp 127.0.0.1 GET {user_script_file}')
+            os.system(f'tftp {self.lineEdit_2.text()} GET {user_script_file}')
             with open(f'{user_script_file}', 'r') as f:
                 text = f.read()
 
