@@ -61,6 +61,9 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
             user_table = self.tableWidget
             if len(user_text_list) < len(etalon_text_list):
                 user_list_len = len(etalon_text_list)
+            elif len(user_text_list) > len(etalon_text_list):
+                etalon_text_list += ['']*(len(user_text_list) - len(etalon_text_list))
+                user_list_len = len(user_text_list)
             else:
                 user_list_len = len(user_text_list)
             user_table.setRowCount(user_list_len)
@@ -83,12 +86,16 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
         etalon_table = self.tableWidget_2
         for el_index in range(len(etalon_text_list)):
             user_text = ''
+            etalon_text = ''
             print()
             if type(user_table.item(el_index, 0)) == NoneType:
                 user_table.setItem(el_index, 0, QtWidgets.QTableWidgetItem(str('')))
             else:
                 user_text = user_table.item(el_index, 0).text()
-            etalon_text = etalon_table.item(el_index, 0).text()
+            if type(etalon_table.item(el_index, 0)) == NoneType:
+                etalon_table.setItem(el_index, 0, QtWidgets.QTableWidgetItem(str('')))
+            else:
+                etalon_text = etalon_table.item(el_index, 0).text()
             if user_text != etalon_text:
                 user_table.item(el_index, 0).setBackground(QtGui.QColor(255, 0, 0))
 
