@@ -23,6 +23,7 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
         self.lineEdit_4.setText('standard1.txt')
 
     def choose_operator(self, page_index):
+        self.curr_ip = self.lineEdit_2.text()
         if page_index == 1 and self.lineEdit.text() != "":
             self.change_size(351, 531)
             self.stackedWidget.setCurrentIndex(page_index)
@@ -43,6 +44,8 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
 
             file_name_etalon = self.lineEdit_4.text()
             os.system(f'tftp {self.curr_ip} GET {file_name_etalon}')
+            print(self.curr_ip)
+            print(file_name_etalon)
             with open(f'{file_name_etalon}', 'r') as f_etalon:
                 et_text = f_etalon.read()
 
