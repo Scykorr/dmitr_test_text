@@ -6,6 +6,12 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt
 
 from GUI.client import Ui_MainWindow
+import socket
+
+def get_local_ip():
+    hostname = socket.gethostname()
+    local_ip = socket.gethostbyname(hostname)
+    return local_ip
 
 
 class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
@@ -44,8 +50,8 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
 
             file_name_etalon = self.lineEdit_4.text()
             os.system(f'tftp {self.curr_ip} GET {file_name_etalon}')
-            print(self.curr_ip)
-            print(file_name_etalon)
+            # print(self.curr_ip)
+            # print(file_name_etalon)
             with open(f'{file_name_etalon}', 'r') as f_etalon:
                 et_text = f_etalon.read()
 

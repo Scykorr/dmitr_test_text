@@ -31,6 +31,7 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pushButton_6.clicked.connect(lambda: self.choose_operator(page_index=3))
         self.pushButton_5.clicked.connect(lambda: self.choose_operator(page_index=1))
         self.pushButton_4.clicked.connect(self.add_standard)
+        self.get_files_amout()
 
     def choose_operator(self, page_index):
         if page_index == 1:
@@ -51,6 +52,11 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
 
 
     def get_standard_files(self):
+        #TODO убрать привязку к системе
+
+        standard_file_amount = self.get_files_amout()
+
+        ##################
         directory = self.lineEdit_3.text()
 
         files = list()
@@ -61,6 +67,7 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
         for file in files:
             if 'standard' in file:
                 standard_files.append(file)
+        #######################
         self.comboBox.clear()
         self.comboBox.addItems(standard_files)
 
@@ -279,6 +286,16 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
         os.system(f'tftp {self.ip_address} PUT {file_name}')
         self.textEdit.clear()
         pathlib.Path(f'{file_name}').unlink()
+
+    def get_files_amout(self):
+        os.system(f'tftp {self.ip_address} get files_amount.txt')
+        with open(f'files_amount.txt', 'r') as f_amount:
+            f_amount_result = f_amount.read().split()[0]
+        os.remove(f'files_amount.txt')
+        return f_amount_result
+
+    def update_files_amount(self):
+        pass
 
 if __name__ == "__main__":
     import sys

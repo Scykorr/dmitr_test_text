@@ -26,34 +26,34 @@ class Server:
         self.generated_list_question = []
         self.generated_list_variant = []
         self.result_list = []
-        self.gen_list()
+        # self.gen_list()
         self.ser.listen(30)
 
-    def gen_list(self):
-        con = sql.connect(self.data_name)
-        cur = con.cursor()
+    # def gen_list(self):
+    #     con = sql.connect(self.data_name)
+    #     cur = con.cursor()
+    #
+    #     self.generated_list_question = [x for x in cur.execute('select iq_question, text_question from question')]
+    #     shuffle(self.generated_list_question)
+    #     self.new_gen_list_questions = self.generated_list_question[:10]
+    #     self.generated_list_variant = [y for y in cur.execute(
+    #         'select id_var_answ, text_var_answ, var_answ_right, id_question from variant_answer')]
+    #     shuffle(self.generated_list_variant)
+    #     self.new_sorted_variants = self.sort_variants()
+    #     self.result_list = self.new_gen_list_questions + self.new_sorted_variants
+    #     con.commit()
+    #     cur.close()
+    #     con.close()
 
-        self.generated_list_question = [x for x in cur.execute('select iq_question, text_question from question')]
-        shuffle(self.generated_list_question)
-        self.new_gen_list_questions = self.generated_list_question[:10]
-        self.generated_list_variant = [y for y in cur.execute(
-            'select id_var_answ, text_var_answ, var_answ_right, id_question from variant_answer')]
-        shuffle(self.generated_list_variant)
-        self.new_sorted_variants = self.sort_variants()
-        self.result_list = self.new_gen_list_questions + self.new_sorted_variants
-        con.commit()
-        cur.close()
-        con.close()
-
-    def sort_variants(self):
-        new_list = [[] for _ in range(10)]
-        counter = 0
-        for question in self.new_gen_list_questions:
-            for var in self.generated_list_variant:
-                if question[0] == var[3]:
-                    new_list[counter].append(var)
-            counter += 1
-        return new_list
+    # def sort_variants(self):
+    #     new_list = [[] for _ in range(10)]
+    #     counter = 0
+    #     for question in self.new_gen_list_questions:
+    #         for var in self.generated_list_variant:
+    #             if question[0] == var[3]:
+    #                 new_list[counter].append(var)
+    #         counter += 1
+    #     return new_list
 
     def sender(self, user, text):
         user.send(text.encode('utf-8'))
@@ -100,18 +100,18 @@ class Server:
                         {'answer': answer, 'error': error}
                     )
                     self.sender(user, ans)
-                elif 1 < len(msg.split()) <= 3:
-                    try:
-                        answer = "adding name success!"
-                        error = ''
-                    except Exception as e:
-                        error = str(e)
-                        answer = ''
-
-                    ans = json.dumps(
-                        {'answer': answer, 'error': error}
-                    )
-                    self.sender(user, ans)
+                # elif 1 < len(msg.split()) <= 3:
+                #     try:
+                #         answer = "adding name success!"
+                #         error = ''
+                #     except Exception as e:
+                #         error = str(e)
+                #         answer = ''
+                #
+                #     ans = json.dumps(
+                #         {'answer': answer, 'error': error}
+                #     )
+                #     self.sender(user, ans)
                 else:
 
                     con = sql.connect(self.data_name)
@@ -142,4 +142,4 @@ class Server:
 
 
 if __name__ == '__main__':
-    Server(ip_address_server, 7000, "data.db").start_server()
+    Server(ip_address_server, 7000, "main.db").start_server()
