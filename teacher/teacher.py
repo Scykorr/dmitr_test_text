@@ -8,7 +8,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QHeaderView
 
 from GUI.teacher import Ui_MainWindow
-
+import shutil
 
 class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self):
@@ -54,8 +54,12 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
     def get_standard_files(self):
         #TODO убрать привязку к системе
 
-        standard_file_amount = self.get_files_amout()
+        standard_file_amount = int(self.get_files_amout())
 
+        for number in range(1, standard_file_amount + 1):
+            os.system(f'tftp {self.lineEdit_2.text()} GET standard{number}.txt')
+            # не просто перемещать(ошибка),но еще перезаписывать существующие
+            shutil.move(f'standard{number}.txt', self.lineEdit_3.text())
         ##################
         directory = self.lineEdit_3.text()
 
@@ -286,16 +290,22 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
         os.system(f'tftp {self.ip_address} PUT {file_name}')
         self.textEdit.clear()
         pathlib.Path(f'{file_name}').unlink()
+        self.update_files_amount()
 
     def get_files_amout(self):
-        os.system(f'tftp {self.ip_address} get files_amount.txt')
+        os.system(f'tftp {self.lineEdit_2.text()} get files_amount.txt')
         with open(f'files_amount.txt', 'r') as f_amount:
             f_amount_result = f_amount.read().split()[0]
         os.remove(f'files_amount.txt')
         return f_amount_result
 
     def update_files_amount(self):
-        pass
+        os.system(f'tftp {self.lineEdit_2.text()} get files_amount.txt')
+        with open(f'files_amount.txt', 'rw') as f_amount:
+            f_amount_result = f_amount.read().split()[0]
+            f_amount.write(str(int(f_amount_result) + 1))
+        os.system(f'tftp {self.lineEdit_2.text()} put files_amount.txt')
+        os.remove(f'files_amount.txt')
 
 if __name__ == "__main__":
     import sys
