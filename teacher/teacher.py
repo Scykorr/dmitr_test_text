@@ -10,6 +10,7 @@ from PyQt5.QtWidgets import QHeaderView
 from GUI.teacher import Ui_MainWindow
 import shutil
 
+
 class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
@@ -50,17 +51,15 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
             self.change_size(448, 561)
             self.stackedWidget.setCurrentIndex(page_index)
 
-
     def get_standard_files(self):
-        #TODO убрать привязку к системе
 
         standard_file_amount = int(self.get_files_amout())
 
         for number in range(1, standard_file_amount + 1):
             os.system(f'tftp {self.lineEdit_2.text()} GET standard{number}.txt')
-            # не просто перемещать(ошибка),но еще перезаписывать существующие
-            shutil.move(f'standard{number}.txt', self.lineEdit_3.text())
-        ##################
+            shutil.copy2(f'standard{number}.txt', self.lineEdit_3.text())
+            os.remove(f'standard{number}.txt')
+
         directory = self.lineEdit_3.text()
 
         files = list()
@@ -71,7 +70,7 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
         for file in files:
             if 'standard' in file:
                 standard_files.append(file)
-        #######################
+
         self.comboBox.clear()
         self.comboBox.addItems(standard_files)
 
@@ -120,7 +119,7 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
             counter_error_strings = 0
             counter_error_symbols = 0
             if len(user_text_list) < len(standard_text_list):
-                user_text_list += ['']*(len(standard_text_list) - len(user_text_list))
+                user_text_list += [''] * (len(standard_text_list) - len(user_text_list))
             user_text_edge = user_text_list[:len(standard_text_list)]
             for i_el, elem in enumerate(standard_text_list):
                 if elem != user_text_edge[i_el]:
@@ -133,8 +132,6 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
             self.users_files_table.setItem(index_el, 1, QtWidgets.QTableWidgetItem(str(counter_error_strings)))
             self.users_files_table.setItem(index_el, 3, QtWidgets.QTableWidgetItem(str(counter_error_symbols)))
         pathlib.Path(f'{file_name_standard}').unlink()
-
-
 
     def show_standard_file(self):
         file_name_standard = self.comboBox.currentText()
@@ -291,6 +288,7 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
         self.textEdit.clear()
         pathlib.Path(f'{file_name}').unlink()
         self.update_files_amount()
+        self.get_standard_files()
 
     def get_files_amout(self):
         os.system(f'tftp {self.lineEdit_2.text()} get files_amount.txt')
@@ -306,6 +304,8 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
             f_amount.write(str(int(f_amount_result) + 1))
         os.system(f'tftp {self.lineEdit_2.text()} put files_amount.txt')
         os.remove(f'files_amount.txt')
+
+
 
 if __name__ == "__main__":
     import sys
