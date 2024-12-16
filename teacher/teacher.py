@@ -26,7 +26,7 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
         self.users_files_table.clicked.connect(
             lambda: self.show_checked_user_script(user_script_file=self.users_files_table.currentItem().text()))
         self.comboBox.currentTextChanged.connect(self.show_standard_file)
-        self.lineEdit_2.setText('127.0.0.1')
+        self.lineEdit_2.setText('10.125.20.250')
         self.ip_address = self.lineEdit_2.text()
         self.pushButton_3.clicked.connect(lambda: self.choose_operator(page_index=1))
         self.pushButton_6.clicked.connect(lambda: self.choose_operator(page_index=3))
@@ -95,6 +95,8 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
         header.setSectionResizeMode(4, QHeaderView.ResizeToContents)
 
         file_name_standard = self.comboBox.currentText()
+        if file_name_standard == '':
+            file_name_standard = 'standard1.txt'
         os.system(f'tftp {self.lineEdit_2.text()} GET {file_name_standard}')
         with open(f'{file_name_standard}', 'r') as f_standard:
             st_text = f_standard.read()
@@ -135,6 +137,8 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def show_standard_file(self):
         file_name_standard = self.comboBox.currentText()
+        if file_name_standard == '':
+            file_name_standard = 'standard1.txt'
         os.system(f'tftp {self.lineEdit_2.text()} GET {file_name_standard}')
         with open(f'{file_name_standard}', 'r') as f_standard:
             st_text = f_standard.read()
@@ -299,8 +303,9 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def update_files_amount(self):
         os.system(f'tftp {self.lineEdit_2.text()} get files_amount.txt')
-        with open(f'files_amount.txt', 'rw') as f_amount:
+        with open(f'files_amount.txt', 'r') as f_amount:
             f_amount_result = f_amount.read().split()[0]
+        with open(f'files_amount.txt', 'w') as f_amount:
             f_amount.write(str(int(f_amount_result) + 1))
         os.system(f'tftp {self.lineEdit_2.text()} put files_amount.txt')
         os.remove(f'files_amount.txt')
