@@ -27,18 +27,36 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pushButton.clicked.connect(lambda: self.choose_operator(page_index=2))
         self.lineEdit.setText('')
         self.lineEdit_4.setText('1.txt')
+        user_file_name = list()
+
+    def check_user_file_name(self, filename):
+        os.system(f'tftp {self.lineEdit_2.text()} GET {filename}.txt')
+        return os.path.exists(f'{filename}.txt')
+
+
 
     def choose_operator(self, page_index):
         self.curr_ip = self.lineEdit_2.text()
-        if page_index == 1 and self.lineEdit.text() != "":
-            self.change_size(351, 531)
-            self.stackedWidget.setCurrentIndex(page_index)
-        elif self.lineEdit.text() == "":
+        self.file_name = '_'.join(self.lineEdit.text().split())
+        result_repeat = self.check_user_file_name(self.file_name)
+
+        if self.lineEdit.text() == "":
             err_dialog = QtWidgets.QErrorMessage(self)
             err_dialog.showMessage("Заполните поле ФИО!")
+        elif result_repeat:
+            err_dialog = QtWidgets.QErrorMessage(self)
+            err_dialog.showMessage("Данный пользователь уже прошел тестирование!")
+            os.remove(f'{self.file_name}.txt')
+        elif page_index == 1 and self.lineEdit.text() != "":
+            self.change_size(351, 531)
+            self.stackedWidget.setCurrentIndex(page_index)
+            standard_num = self.lineEdit_4.text().split('.txt')[0]
+            if standard_num == '1':
+                self.textEdit.append('1')
+                self.textEdit.append('2  3')
+                self.textEdit.append('4  5')
         elif page_index == 2:
             self.change_size(721, 531)
-            self.file_name = '_'.join(self.lineEdit.text().split())
             pathlib.Path(f'{self.file_name}.txt').touch()
             pathlib.Path(f'{self.file_name}.txt').write_text(self.textEdit.toPlainText())
             os.system(f'tftp {self.curr_ip} PUT {self.file_name}.txt')

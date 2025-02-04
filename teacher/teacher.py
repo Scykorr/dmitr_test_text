@@ -27,7 +27,7 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
             lambda: self.show_checked_user_script(user_script_file=self.users_files_table.currentItem().text()))
         self.comboBox.currentTextChanged.connect(self.show_standard_file)
         # self.lineEdit_2.setText('10.125.20.250')
-        self.lineEdit_2.setText('127.0.0.1')
+        self.lineEdit_2.setText('192.168.1.14')
         self.ip_address = self.lineEdit_2.text()
         self.pushButton_3.clicked.connect(lambda: self.choose_operator(page_index=1))
         self.pushButton_6.clicked.connect(lambda: self.choose_operator(page_index=3))
@@ -70,8 +70,9 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
 
         for file in files:
             for el in range(31):
-                if str(el) in file:
+                if str(el) in file and '.txt' in file:
                     standard_files.append(file)
+                    break
 
         self.comboBox.clear()
         self.comboBox.addItems(standard_files)
@@ -83,9 +84,9 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
         files += os.listdir(directory)
         users_files = list()
         for file in files:
-            for el in range(31):
-                if '.txt' in file and str(el) not in file:
-                    users_files.append(file)
+            print(file.split('.txt'))
+            if '.txt' in file and file.split('.txt')[0] not in map(str, range(31)):
+                users_files.append(file)
         self.users_files_table.setColumnCount(5)
         self.users_files_table.setRowCount(len(users_files))
         self.users_files_table.setHorizontalHeaderLabels(
@@ -238,7 +239,8 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
 
             standard_text_list = st_text.split('\n')
 
-            os.system(f'tftp {self.lineEdit_2.text()} GET {user_script_file}')
+            # os.system(f'tftp {self.lineEdit_2.text()} GET {user_script_file}')
+            os.system(f'tftp 127.0.0.1 GET {user_script_file}')
             with open(f'{user_script_file}', 'r') as f:
                 text = f.read()
 
@@ -313,7 +315,6 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
             f_amount.write(str(int(f_amount_result) + 1))
         os.system(f'tftp {self.lineEdit_2.text()} put files_amount.txt')
         os.remove(f'files_amount.txt')
-
 
 
 if __name__ == "__main__":
