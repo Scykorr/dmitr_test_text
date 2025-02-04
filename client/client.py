@@ -25,8 +25,8 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
         self.curr_ip = self.lineEdit_2.text()
         self.pushButton_2.clicked.connect(lambda: self.choose_operator(page_index=1))
         self.pushButton.clicked.connect(lambda: self.choose_operator(page_index=2))
-        self.lineEdit.setText('Ivanov Ivan Ivanovich')
-        self.lineEdit_4.setText('standard1.txt')
+        self.lineEdit.setText('')
+        self.lineEdit_4.setText('1.txt')
 
     def choose_operator(self, page_index):
         self.curr_ip = self.lineEdit_2.text()

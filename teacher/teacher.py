@@ -26,7 +26,8 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
         self.users_files_table.clicked.connect(
             lambda: self.show_checked_user_script(user_script_file=self.users_files_table.currentItem().text()))
         self.comboBox.currentTextChanged.connect(self.show_standard_file)
-        self.lineEdit_2.setText('10.125.20.250')
+        # self.lineEdit_2.setText('10.125.20.250')
+        self.lineEdit_2.setText('127.0.0.1')
         self.ip_address = self.lineEdit_2.text()
         self.pushButton_3.clicked.connect(lambda: self.choose_operator(page_index=1))
         self.pushButton_6.clicked.connect(lambda: self.choose_operator(page_index=3))
@@ -56,9 +57,9 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
         standard_file_amount = int(self.get_files_amout())
 
         for number in range(1, standard_file_amount + 1):
-            os.system(f'tftp {self.lineEdit_2.text()} GET standard{number}.txt')
-            shutil.copy2(f'standard{number}.txt', self.lineEdit_3.text())
-            os.remove(f'standard{number}.txt')
+            os.system(f'tftp {self.lineEdit_2.text()} GET {number}.txt')
+            shutil.copy2(f'{number}.txt', self.lineEdit_3.text())
+            os.remove(f'{number}.txt')
 
         directory = self.lineEdit_3.text()
 
@@ -68,8 +69,9 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
         standard_files = list()
 
         for file in files:
-            if 'standard' in file:
-                standard_files.append(file)
+            for el in range(31):
+                if str(el) in file:
+                    standard_files.append(file)
 
         self.comboBox.clear()
         self.comboBox.addItems(standard_files)
@@ -81,8 +83,9 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
         files += os.listdir(directory)
         users_files = list()
         for file in files:
-            if '.txt' in file and 'standard' not in file:
-                users_files.append(file)
+            for el in range(31):
+                if '.txt' in file and str(el) not in file:
+                    users_files.append(file)
         self.users_files_table.setColumnCount(5)
         self.users_files_table.setRowCount(len(users_files))
         self.users_files_table.setHorizontalHeaderLabels(
@@ -96,7 +99,7 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
 
         file_name_standard = self.comboBox.currentText()
         if file_name_standard == '':
-            file_name_standard = 'standard1.txt'
+            file_name_standard = '1.txt'
         os.system(f'tftp {self.lineEdit_2.text()} GET {file_name_standard}')
         with open(f'{file_name_standard}', 'r') as f_standard:
             st_text = f_standard.read()
@@ -138,7 +141,7 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
     def show_standard_file(self):
         file_name_standard = self.comboBox.currentText()
         if file_name_standard == '':
-            file_name_standard = 'standard1.txt'
+            file_name_standard = '1.txt'
         os.system(f'tftp {self.lineEdit_2.text()} GET {file_name_standard}')
         with open(f'{file_name_standard}', 'r') as f_standard:
             st_text = f_standard.read()
@@ -282,10 +285,11 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
         files += os.listdir(path_file_name)
         standard_files = list()
         for file in files:
-            if 'standard' in file:
-                standard_files.append(file)
+            for el in range(31):
+                if str(el) in file:
+                    standard_files.append(file)
         num = len(standard_files) + 1
-        file_name = f'standard{num}.txt'
+        file_name = f'{num}.txt'
         pathlib.Path(f'{file_name}').touch()
         pathlib.Path(f'{file_name}').write_text(self.textEdit.toPlainText())
         os.system(f'tftp {self.ip_address} PUT {file_name}')
