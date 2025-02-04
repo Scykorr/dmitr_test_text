@@ -26,8 +26,8 @@ class MainClass(QtWidgets.QMainWindow, Ui_MainWindow):
         self.users_files_table.clicked.connect(
             lambda: self.show_checked_user_script(user_script_file=self.users_files_table.currentItem().text()))
         self.comboBox.currentTextChanged.connect(self.show_standard_file)
-        # self.lineEdit_2.setText('10.125.20.250')
-        self.lineEdit_2.setText('192.168.1.14')
+        self.lineEdit_2.setText('10.125.20.250')
+        # self.lineEdit_2.setText('192.168.1.14')
         self.ip_address = self.lineEdit_2.text()
         self.pushButton_3.clicked.connect(lambda: self.choose_operator(page_index=1))
         self.pushButton_6.clicked.connect(lambda: self.choose_operator(page_index=3))
